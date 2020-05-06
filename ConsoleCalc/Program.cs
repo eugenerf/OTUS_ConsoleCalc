@@ -7,16 +7,20 @@ namespace ConsoleCalc
     {
         static void Main(string[] args)
         {
-            double[] operand = new double[1];
+            double[] operand = null;
+            string userInput;
 
-            Console.Write("Input the first number: ");
-            string userInput = Console.ReadLine();
-            double.TryParse(userInput, NumberStyles.Number, CultureInfo.InvariantCulture, out operand[0]);
-
-            Console.Write("Input the second number: ");
-            userInput = Console.ReadLine();
-            Array.Resize<double>(ref operand, operand.Length + 1);
-            double.TryParse(userInput, NumberStyles.Number, CultureInfo.InvariantCulture, out operand[1]);
+            Console.WriteLine("Input your operands (empty string to finish input):");
+            do
+            {
+                int operandsEntered = (operand == null) ? 0 : operand.Length;
+                Console.Write($"\t{operandsEntered + 1}: ");
+                userInput = Console.ReadLine();
+                if (userInput.Length == 0) break;
+                Array.Resize<double>(ref operand, operandsEntered + 1);
+                double.TryParse(userInput, NumberStyles.Number, CultureInfo.InvariantCulture, out operand[operandsEntered]);
+            }
+            while (true);
 
             Console.WriteLine($"\n\nYour operands:");
             for(int i = 0; i < operand.Length; i++)
