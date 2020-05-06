@@ -9,14 +9,14 @@ namespace ConsoleCalc
     /// <summary>
     /// Number (terminal expression)
     /// </summary>
-    class NumberExpression : IExpression
+    class Number : IExpression
     {
         /// <summary>
         /// Variable name
         /// </summary>
         string name;
 
-        public NumberExpression(string variableName)
+        public Number(string variableName)
         {
             name = variableName;
         }
