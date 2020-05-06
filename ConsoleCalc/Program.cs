@@ -7,7 +7,7 @@ namespace ConsoleCalc
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("---== eugene Console Calculator ==---");
+            Console.WriteLine("---== eugene Console Calculator (using the Interpreter pattern)==---");
 
             Context context = new Context();
 
