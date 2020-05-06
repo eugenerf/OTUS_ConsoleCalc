@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Context.cs" />
     <Compile Include="IExpression.cs" />
+    <Compile Include="NumberExpression.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
