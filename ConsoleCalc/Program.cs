@@ -7,27 +7,62 @@ namespace ConsoleCalc
     {
         static void Main(string[] args)
         {
-            double[] operand = null;
-            string userInput;
+            Console.WriteLine("---== OTUS Console Calc ==---");
+            double operand1 = GetNumber("Input the first operand");
+            double operand2 = GetNumber("Input the second operand");
 
-            Console.WriteLine("Input your operands (empty string to finish input):");
-            do
-            {
-                int operandsEntered = (operand == null) ? 0 : operand.Length;
-                Console.Write($"\t{operandsEntered + 1}: ");
-                userInput = Console.ReadLine();
-                if (userInput.Length == 0) break;
-                Array.Resize<double>(ref operand, operandsEntered + 1);
-                double.TryParse(userInput, NumberStyles.Number, CultureInfo.InvariantCulture, out operand[operandsEntered]);
-            }
-            while (true);
+            Console.Write("\nChoose the operation (+,-,*,/,min,max): ");
+            string operation = Console.ReadLine();
 
-            Console.WriteLine($"\n\nYour operands:");
-            for(int i = 0; i < operand.Length; i++)
-                Console.WriteLine($"\t {i+1}: {operand[i]}");
-
+            double result = GetResult(operand1, operand2, operation);
+            Console.WriteLine($"Result is: {result}");
+            
             Console.Write("Any key to exit...");
             Console.ReadKey(true);
         }
+
+        static double GetResult(double operand1, double operand2, string operation)
+        {
+            switch (operation)
+            {
+                case "+":
+                    return operand1 + operand2;
+                case "-":
+                    return operand1 - operand2;
+                case "*":
+                    return operand1 * operand2;
+                case "/":
+                    return operand1 / operand2;
+                case "min":
+                    return GetMin(operand1, operand2);
+                case "max":
+                    return GetMax(operand1, operand2);
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
+        static double GetNumber(string text)
+        {
+            Console.Write(text + "_> ");
+            string userInput = Console.ReadLine();
+            double number = .0;
+            double.TryParse(userInput, NumberStyles.Number, CultureInfo.InvariantCulture, out number);
+            return number;
+        }
+
+        static double GetMax(double a, double b)
+        {
+            if (a > b) return a;
+            else return b;
+        }
+
+        static double GetMin(double a, double b)
+        {
+            if (a < b) return a;
+            else return b;
+        }
+
+        
     }
 }
