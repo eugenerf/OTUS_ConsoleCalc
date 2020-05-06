@@ -8,38 +8,57 @@ namespace ConsoleCalc
         static void Main(string[] args)
         {
             Console.WriteLine("---== OTUS Console Calc ==---");
-            double operand1 = GetNumber("Input the first operand");
-            double operand2 = GetNumber("Input the second operand");
+            while (true)
+            {
+                double operand1 = GetNumber("Input the first operand");
+                double operand2 = GetNumber("Input the second operand");
 
-            Console.Write("\nChoose the operation (+,-,*,/,min,max): ");
-            string operation = Console.ReadLine();
+                double result = .0;
+                byte operationResult = 0;
+                string operation;
+                do
+                {
+                    Console.Write("\nChoose the operation (+,-,*,/,min,max): ");
+                    operation = Console.ReadLine();
+                    operationResult = GetResult(operand1, operand2, operation, out result);
+                }
+                while (operationResult >= 100);
 
-            double result = GetResult(operand1, operand2, operation);
-            Console.WriteLine($"Result is: {result}");
-            
-            Console.Write("Any key to exit...");
-            Console.ReadKey(true);
+                if (operationResult == 0)
+                    Console.WriteLine($"Result is: {result}");
+                else
+                    Console.WriteLine("Result is: NaN");
+
+                Console.Write("\n\nExit? [y/n] _> ");
+                if (Console.ReadKey(false).Key == ConsoleKey.Y) return;
+                Console.WriteLine("\n\n");
+            }
         }
 
-        static double GetResult(double operand1, double operand2, string operation)
+        static byte GetResult(double operand1, double operand2, string operation, out double result)
         {
             switch (operation)
             {
-                case "+":
-                    return operand1 + operand2;
-                case "-":
-                    return operand1 - operand2;
-                case "*":
-                    return operand1 * operand2;
+                case "+": result = operand1 + operand2; break;
+                case "-": result = operand1 - operand2; break;
+                case "*": result = operand1 * operand2; break;
                 case "/":
-                    return operand1 / operand2;
-                case "min":
-                    return GetMin(operand1, operand2);
-                case "max":
-                    return GetMax(operand1, operand2);
+                    if (operand2 == 0)
+                    {
+                        Console.WriteLine("ERROR! Division by zero!");
+                        result = .0;
+                        return 1;
+                    }
+                    else result = operand1 / operand2;
+                    break;
+                case "min": result = GetMin(operand1, operand2); break;
+                case "max": result = GetMax(operand1, operand2); break;
                 default:
-                    throw new InvalidOperationException();
+                    Console.WriteLine("ERROR! Unknown operation!");
+                    result = .0;
+                    return 100;
             }
+            return 0;
         }
 
         static double GetNumber(string text)
@@ -47,8 +66,12 @@ namespace ConsoleCalc
             Console.Write(text + "_> ");
             string userInput = Console.ReadLine();
             double number = .0;
-            double.TryParse(userInput, NumberStyles.Number, CultureInfo.InvariantCulture, out number);
-            return number;
+            while (!double.TryParse(userInput, NumberStyles.Number, CultureInfo.InvariantCulture, out number))
+            {
+                Console.Write("WRONG INPUT! Try again! _> ");
+                userInput = Console.ReadLine();
+            }
+                return number;
         }
 
         static double GetMax(double a, double b)
