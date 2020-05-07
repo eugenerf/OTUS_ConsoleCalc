@@ -1,24 +1,15 @@
-﻿namespace ConsoleCalc
+﻿using System;
+
+namespace ConsoleCalc
 {
     /// <summary>
     /// Add operation (non terminal expression)
     /// </summary>
-    class Add : IExpression
+    class Add : Operands, IExpression
     {
-        /// <summary>
-        /// Left operand
-        /// </summary>
-        IExpression leftOperand;
-        /// <summary>
-        /// Right operand
-        /// </summary>
-        IExpression rightOperand;
+        public Add() : base() { }
 
-        public Add(IExpression left, IExpression right)
-        {
-            leftOperand = left;
-            rightOperand = right;
-        }
+        public Add(IExpression left, IExpression right) : base(left, right) { }
 
         public double Interpret(Context context)
         {

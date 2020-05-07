@@ -3,22 +3,11 @@
     /// <summary>
     /// Subtract operation
     /// </summary>
-    class Subtract : IExpression
+    class Subtract : Operands, IExpression
     {
-        /// <summary>
-        /// Left operand
-        /// </summary>
-        IExpression leftOperand;
-        /// <summary>
-        /// Right operand
-        /// </summary>
-        IExpression rightOperand;
+        public Subtract() : base() { }
 
-        public Subtract(IExpression left, IExpression right)
-        {
-            leftOperand = left;
-            rightOperand = right;
-        }
+        public Subtract(IExpression left, IExpression right) : base(left, right) { }
 
         public double Interpret(Context context)
         {
