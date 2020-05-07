@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExpressionReader.cs" />
     <Compile Include="Operands.cs" />
     <Compile Include="Add.cs" />
     <Compile Include="Context.cs" />

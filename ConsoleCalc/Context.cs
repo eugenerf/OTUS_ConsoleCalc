@@ -24,14 +24,18 @@ namespace ConsoleCalc
         /// <summary>
         /// Sets the existing variable value or adds a new variable
         /// </summary>
-        /// <param name="name">Variable name</param>
         /// <param name="value">Variable value</param>
-        public void SetVariable(string name, double value)
+        /// <returns>Adde variable name</returns>
+        public string AddVariable(double value)
         {
+            string name = "op" + variables.Count.ToString();
+
             if (variables.ContainsKey(name))
                 variables[name] = value;
             else
                 variables.Add(name, value);
+
+            return name;
         }
     }
 }
