@@ -105,9 +105,11 @@ namespace ConsoleCalc
             if (curPriority >= byPriority.Length)
             {
                 double variableValue = .0;
-                string variableName = "";                
+                string variableName = "";
                 if (!double.TryParse(source, NumberStyles.Any, CultureInfo.InvariantCulture, out variableValue))
+                {
                     return false;
+                }
                 variableName = context.AddVariable(variableValue);
                 expression = new Number(variableName);
                 return true;
@@ -117,7 +119,7 @@ namespace ConsoleCalc
                 return ReadRecursively(source, ref expression, ref context, curPriority + 1, 0); ;
             }
 
-            int operationIndexInSource = source.IndexOf(byPriority[curPriority][curOperation]);
+            int operationIndexInSource = source.LastIndexOf(byPriority[curPriority][curOperation]);
             if (operationIndexInSource == -1)
             {
                 return ReadRecursively(source, ref expression, ref context, curPriority, curOperation + 1); ;

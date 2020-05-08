@@ -13,6 +13,8 @@ namespace ConsoleCalc
             Console.WriteLine("-\tsubtraction (using: 1-2)");
             Console.WriteLine("*\tmultiplication (using: 1*2)");
             Console.WriteLine("/\tdivision (using: 1/2)");
+            Console.WriteLine("^\tpower (using: 1^2)");
+            Console.WriteLine("v\troot (using: 1v2)");
             Console.WriteLine("\nEnter the expression using available operations and numbers.");
             Console.WriteLine("Then press <Enter> to calculate.\n");
 
@@ -20,6 +22,8 @@ namespace ConsoleCalc
             ExpressionReader.AddOperation('-', () => { return new Subtract(); });
             ExpressionReader.AddOperation('*', () => { return new Multiply(); }, 1);
             ExpressionReader.AddOperation('/', () => { return new Divide(); }, 1);
+            ExpressionReader.AddOperation('^', () => { return new Power(); }, 2);
+            ExpressionReader.AddOperation('v', () => { return new Root(); }, 2);
 
             Context context = null;
             IExpression expression = null;
