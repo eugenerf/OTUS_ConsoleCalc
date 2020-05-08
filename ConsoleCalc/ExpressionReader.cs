@@ -108,8 +108,31 @@ namespace ConsoleCalc
                     throw new ArgumentOutOfRangeException(source, "Tried to parse double");
                 variableName = context.AddVariable(variableValue);
                 expression = new Number(variableName);
+                return;
+            }
+            if (curOperation >= byPriority[curPriority].Length)
+            {
+                ReadRecursively(source, ref expression, ref context, curPriority + 1, 0);
+                return;
             }
 
+            int operationIndexInSource = source.IndexOf(byPriority[curPriority][curOperation]);
+            if (operationIndexInSource == -1)
+            {
+                ReadRecursively(source, ref expression, ref context, curPriority, curOperation + 1);
+                return;
+            }
+            
+            expression = operations[byPriority[curPriority][curOperation]].Invoke();
+            string leftSource = source.Substring(0, operationIndexInSource);
+            IExpression leftExpression = null;
+            ReadRecursively(leftSource, ref leftExpression, ref context, curPriority, curOperation);
+            ((Operands)expression).AddLeft(leftExpression);
+
+            string rightSource = source.Substring(operationIndexInSource + 1, source.Length - operationIndexInSource - 1);
+            IExpression rightExpression = null;
+            ReadRecursively(rightSource, ref rightExpression, ref context, curPriority, curOperation);
+            ((Operands)expression).AddRight(rightExpression);
         }
 
         /// <summary>
