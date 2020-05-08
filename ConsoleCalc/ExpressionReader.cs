@@ -119,10 +119,27 @@ namespace ConsoleCalc
                 return ReadRecursively(source, ref expression, ref context, curPriority + 1, 0); ;
             }
 
-            int operationIndexInSource = source.LastIndexOf(byPriority[curPriority][curOperation]);
-            if (operationIndexInSource == -1)
+            //looking for the current operation in the source
+            int operationIndexInSource = source.IndexOf(byPriority[curPriority][curOperation]);
+            //The following while cycle is for search of the current operation in the source.
+            //We could just look for it without this cycle (in the operationIndexInSource declaration),
+            //but it would cause wrong interpretation of negative numbers.
+            //Because the minus sign (-) represents subtraction and sign inversion.
+            //For example: -1 equals 0-1; but 2--1 must be interpreted not as 2-0-1 but as 2-(-1).
+            while (true)
             {
-                return ReadRecursively(source, ref expression, ref context, curPriority, curOperation + 1); ;
+                if (operationIndexInSource == -1)   //if not found
+                {
+                    //move to the next operation
+                    return ReadRecursively(source, ref expression, ref context, curPriority, curOperation + 1); ;
+                }
+                if (operationIndexInSource == 0 ||                                  //if current operation is the first symbol in the source OR
+                    operations.ContainsKey(source[operationIndexInSource - 1]))     //  previous symbol in the source is also an operation
+                {
+                    //go on searching for current operation
+                    operationIndexInSource = source.IndexOf(byPriority[curPriority][curOperation], operationIndexInSource + 1);
+                }
+                else break; //finished searching and found
             }
 
             expression = operations[byPriority[curPriority][curOperation]].Invoke();
