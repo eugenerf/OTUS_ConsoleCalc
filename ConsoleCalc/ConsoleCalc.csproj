@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Divide.cs" />
     <Compile Include="ExpressionReader.cs" />
+    <Compile Include="Multiply.cs" />
     <Compile Include="Operands.cs" />
     <Compile Include="Add.cs" />
     <Compile Include="Context.cs" />

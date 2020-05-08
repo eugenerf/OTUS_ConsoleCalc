@@ -31,6 +31,7 @@ namespace ConsoleCalc
         {
             if (operations == null) operations = new Dictionary<char, Func<IExpression>>();
             if (byPriority == null) byPriority = new char[priority + 1][];
+            if (byPriority.Length <= priority) Array.Resize(ref byPriority, (int)priority + 1);
             if (operations.ContainsKey(symbol))
             {
                 operations[symbol] = expression;

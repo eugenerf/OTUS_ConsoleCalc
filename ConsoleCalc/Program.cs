@@ -11,11 +11,13 @@ namespace ConsoleCalc
 
             ExpressionReader.AddOperation('+', () => { return new Add(); });
             ExpressionReader.AddOperation('-', () => { return new Subtract(); });
+            ExpressionReader.AddOperation('*', () => { return new Multiply(); }, 1);
+            ExpressionReader.AddOperation('/', () => { return new Divide(); }, 1);
 
             Context context = null;
             IExpression expression = null;
 
-            string strExpression = "1-5";
+            string strExpression = "1/0/0";
 
             ExpressionReader.ReadExpression(strExpression, ref expression, ref context);
 
