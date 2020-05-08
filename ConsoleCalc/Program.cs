@@ -8,6 +8,13 @@ namespace ConsoleCalc
         static void Main(string[] args)
         {
             Console.WriteLine("---== eugene Console Calculator (using the Interpreter pattern)==---");
+            Console.WriteLine("\nList of available operations:");
+            Console.WriteLine("+\taddition (using: 1+2)");
+            Console.WriteLine("-\tsubtraction (using: 1-2)");
+            Console.WriteLine("*\tmultiplication (using: 1*2)");
+            Console.WriteLine("/\tdivision (using: 1/2)");
+            Console.WriteLine("\nEnter the expression using available operations and numbers.");
+            Console.WriteLine("Then press <Enter> to calculate.\n");
 
             ExpressionReader.AddOperation('+', () => { return new Add(); });
             ExpressionReader.AddOperation('-', () => { return new Subtract(); });
@@ -17,11 +24,16 @@ namespace ConsoleCalc
             Context context = null;
             IExpression expression = null;
 
-            string strExpression = "1/0/0";
+            string strExpression = Console.ReadLine();
 
-            ExpressionReader.ReadExpression(strExpression, ref expression, ref context);
-
-            Console.WriteLine(strExpression + " = " + expression.Interpret(context).ToString());
+            if (ExpressionReader.ReadExpression(strExpression, ref expression, ref context))
+            {
+                Console.WriteLine("\nExpression result is: " + expression.Interpret(context).ToString());
+            }
+            else
+            {
+                Console.WriteLine("ERROR! Expression format unknown. Cannot calculate.");
+            }
 
             Console.Write("Any key to exit...");
             Console.ReadKey(true);

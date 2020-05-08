@@ -47,9 +47,9 @@ namespace ConsoleCalc
 
         private static void DeleteSymbolFromPriority(char symbol)
         {
-            for(int i = 0; i < byPriority.Length; i++)
+            for (int i = 0; i < byPriority.Length; i++)
             {
-                for(int j = 0; j < byPriority[i].Length; j++)
+                for (int j = 0; j < byPriority[i].Length; j++)
                 {
                     if (byPriority[i][j] == symbol)
                     {
@@ -76,7 +76,7 @@ namespace ConsoleCalc
         {
             return operations[symbol];
         }
-        
+
         /// <summary>
         /// Reads the expression from the source. Result is stored to the expression and context
         /// </summary>
@@ -84,56 +84,57 @@ namespace ConsoleCalc
         /// <param name="expression">Result expression tree</param>
         /// <param name="context">Result expression context</param>
         /// <returns>TRUE if read successfully</returns>
-        static public bool ReadExpression(string source,ref IExpression expression,ref Context context)
+        static public bool ReadExpression(string source, ref IExpression expression, ref Context context)
         {
             context = null;
             expression = null;
 
             source = source.Replace(" ", "");
+            source = source.Replace(
+                CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, 
+                CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
             if (!CheckString(source)) return false;
 
             context = new Context();
 
-            ReadRecursively(source, ref expression, ref context, 0, 0);
-
-            return true;
+            return ReadRecursively(source, ref expression, ref context, 0, 0); ;
         }
 
-        private static void ReadRecursively(string source, ref IExpression expression, ref Context context, uint curPriority, uint curOperation)
+        private static bool ReadRecursively(string source, ref IExpression expression, ref Context context, uint curPriority, uint curOperation)
         {
             if (curPriority >= byPriority.Length)
             {
                 double variableValue = .0;
-                string variableName = "";
-                if (!double.TryParse(source, NumberStyles.Number, CultureInfo.InvariantCulture, out variableValue))
-                    throw new ArgumentOutOfRangeException(source, "Tried to parse double");
+                string variableName = "";                
+                if (!double.TryParse(source, NumberStyles.Any, CultureInfo.InvariantCulture, out variableValue))
+                    return false;
                 variableName = context.AddVariable(variableValue);
                 expression = new Number(variableName);
-                return;
+                return true;
             }
             if (curOperation >= byPriority[curPriority].Length)
             {
-                ReadRecursively(source, ref expression, ref context, curPriority + 1, 0);
-                return;
+                return ReadRecursively(source, ref expression, ref context, curPriority + 1, 0); ;
             }
 
             int operationIndexInSource = source.IndexOf(byPriority[curPriority][curOperation]);
             if (operationIndexInSource == -1)
             {
-                ReadRecursively(source, ref expression, ref context, curPriority, curOperation + 1);
-                return;
+                return ReadRecursively(source, ref expression, ref context, curPriority, curOperation + 1); ;
             }
-            
+
             expression = operations[byPriority[curPriority][curOperation]].Invoke();
             string leftSource = source.Substring(0, operationIndexInSource);
             IExpression leftExpression = null;
-            ReadRecursively(leftSource, ref leftExpression, ref context, curPriority, curOperation);
+            bool leftResult = ReadRecursively(leftSource, ref leftExpression, ref context, curPriority, curOperation);
             ((Operands)expression).AddLeft(leftExpression);
 
             string rightSource = source.Substring(operationIndexInSource + 1, source.Length - operationIndexInSource - 1);
             IExpression rightExpression = null;
-            ReadRecursively(rightSource, ref rightExpression, ref context, curPriority, curOperation);
+            bool rightResult = ReadRecursively(rightSource, ref rightExpression, ref context, curPriority, curOperation);
             ((Operands)expression).AddRight(rightExpression);
+
+            return leftResult && rightResult;
         }
 
         /// <summary>
@@ -144,7 +145,9 @@ namespace ConsoleCalc
         static bool CheckString(string source)
         {
             foreach (char c in source)
-                if (!char.IsDigit(c) && !operations.ContainsKey(c))
+                if (!char.IsDigit(c) &&
+                    !(c == '.' || c == ',') &&
+                    !operations.ContainsKey(c))
                     return false;
             return true;
         }
